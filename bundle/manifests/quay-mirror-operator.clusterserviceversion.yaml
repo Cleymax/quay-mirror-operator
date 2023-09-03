@@ -1,0 +1,326 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "clementperrin.fr/v1alpha1",
+          "kind": "QuayMirrorLocation",
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/created-by": "quay-mirror-operator",
+              "app.kubernetes.io/instance": "quaymirrorlocation-sample",
+              "app.kubernetes.io/managed-by": "kustomize",
+              "app.kubernetes.io/name": "quaymirrorlocation",
+              "app.kubernetes.io/part-of": "quay-mirror-operator"
+            },
+            "name": "quaymirrorlocation-sample"
+          },
+          "spec": null
+        },
+        {
+          "apiVersion": "clementperrin.fr/v1alpha1",
+          "kind": "QuayMirrorRepository",
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/created-by": "quay-mirror-operator",
+              "app.kubernetes.io/instance": "quaymirrorrepository-sample",
+              "app.kubernetes.io/managed-by": "kustomize",
+              "app.kubernetes.io/name": "quaymirrorrepository",
+              "app.kubernetes.io/part-of": "quay-mirror-operator"
+            },
+            "name": "quaymirrorrepository-sample"
+          },
+          "spec": null
+        }
+      ]
+    capabilities: Basic Install
+    createdAt: "2023-09-03T19:44:19Z"
+    operators.operatorframework.io/builder: operator-sdk-v1.31.0
+    operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
+  name: quay-mirror-operator.v0.0.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: QuayMirrorLocation is the Schema for the quaymirrorlocations API
+      displayName: Quay Mirror Location
+      kind: QuayMirrorLocation
+      name: quaymirrorlocations.clementperrin.fr
+      specDescriptors:
+      - description: InsecureRegistry refers to whether to skip TLS verification to
+          the Quay registry.
+        displayName: Insecure Registry
+        path: insecureRegistry
+      - description: QuayCredentialsSecret refers to the Secret containing credentials
+          to communicate with the Quay registry.
+        displayName: Quay Credentials secret
+        path: quayCredentialsSecret
+        x-descriptors:
+        - urn:alm:descriptor:io.kubernetes:Secret
+      - description: Key represents the specific key to reference from the secret
+        displayName: Key within the secret
+        path: quayCredentialsSecret.key
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: Name represents the name of the secret
+        displayName: Name of the secret
+        path: quayCredentialsSecret.name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: Namespace represents the namespace containing the secret
+        displayName: Namespace containing the secret
+        path: quayCredentialsSecret.namespace
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: QuayHostname is the hostname of the Quay registry.
+        displayName: Quay hostname
+        path: quayHostname
+      - description: QuayOrganization is the organization within the Quay registry
+          to mirror.
+        displayName: Quay organization
+        path: quayOrganization
+      statusDescriptors:
+      - displayName: Conditions
+        path: conditions
+        x-descriptors:
+        - urn:alm:descriptor:io.kubernetes.conditions
+      - description: RepositoryCount is the number of repositories in the Quay organization.
+        displayName: Repository count
+        path: repositoryCount
+      version: v1alpha1
+    - description: QuayMirrorRepository is the Schema for the quaymirrorrepositories
+        API
+      displayName: Quay Mirror Repository
+      kind: QuayMirrorRepository
+      name: quaymirrorrepositories.clementperrin.fr
+      version: v1alpha1
+  description: Operator to manage mirror repository on Quay
+  displayName: Quay Mirror Operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - clementperrin.fr
+          resources:
+          - quaymirrorlocations
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - clementperrin.fr
+          resources:
+          - quaymirrorlocations/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - clementperrin.fr
+          resources:
+          - quaymirrorlocations/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - clementperrin.fr
+          resources:
+          - quaymirrorrepositories
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - clementperrin.fr
+          resources:
+          - quaymirrorrepositories/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - clementperrin.fr
+          resources:
+          - quaymirrorrepositories/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        serviceAccountName: quay-mirror-operator-controller-manager
+      deployments:
+      - label:
+          app.kubernetes.io/component: manager
+          app.kubernetes.io/created-by: quay-mirror-operator
+          app.kubernetes.io/instance: controller-manager
+          app.kubernetes.io/managed-by: kustomize
+          app.kubernetes.io/name: deployment
+          app.kubernetes.io/part-of: quay-mirror-operator
+          control-plane: controller-manager
+        name: quay-mirror-operator-controller-manager
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              control-plane: controller-manager
+          strategy: {}
+          template:
+            metadata:
+              annotations:
+                kubectl.kubernetes.io/default-container: manager
+              labels:
+                control-plane: controller-manager
+            spec:
+              affinity:
+                nodeAffinity:
+                  requiredDuringSchedulingIgnoredDuringExecution:
+                    nodeSelectorTerms:
+                    - matchExpressions:
+                      - key: kubernetes.io/arch
+                        operator: In
+                        values:
+                        - amd64
+                        - arm64
+                        - ppc64le
+                        - s390x
+                      - key: kubernetes.io/os
+                        operator: In
+                        values:
+                        - linux
+              containers:
+              - args:
+                - --secure-listen-address=0.0.0.0:8443
+                - --upstream=http://127.0.0.1:8080/
+                - --logtostderr=true
+                - --v=0
+                image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.1
+                name: kube-rbac-proxy
+                ports:
+                - containerPort: 8443
+                  name: https
+                  protocol: TCP
+                resources:
+                  limits:
+                    cpu: 500m
+                    memory: 128Mi
+                  requests:
+                    cpu: 5m
+                    memory: 64Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                    - ALL
+              - args:
+                - --health-probe-bind-address=:8081
+                - --metrics-bind-address=127.0.0.1:8080
+                - --leader-elect
+                command:
+                - /manager
+                image: docker.io/cleymax/quay-mirror-controller:latest
+                livenessProbe:
+                  httpGet:
+                    path: /healthz
+                    port: 8081
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+                name: manager
+                readinessProbe:
+                  httpGet:
+                    path: /readyz
+                    port: 8081
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                resources:
+                  limits:
+                    cpu: 500m
+                    memory: 128Mi
+                  requests:
+                    cpu: 10m
+                    memory: 64Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                    - ALL
+              securityContext:
+                runAsNonRoot: true
+              serviceAccountName: quay-mirror-operator-controller-manager
+              terminationGracePeriodSeconds: 10
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - coordination.k8s.io
+          resources:
+          - leases
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        serviceAccountName: quay-mirror-operator-controller-manager
+    strategy: deployment
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - quay
+  - mirror
+  links:
+  - name: Quay Mirror Operator
+    url: https://quay-mirror-operator.domain
+  maturity: alpha
+  provider:
+    name: clementperrin/quay-mirror-operator
+  version: 0.0.1

@@ -1,0 +1,59 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - clementperrin.fr
+  resources:
+  - quaymirrorlocations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - clementperrin.fr
+  resources:
+  - quaymirrorlocations/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - clementperrin.fr
+  resources:
+  - quaymirrorlocations/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - clementperrin.fr
+  resources:
+  - quaymirrorrepositories
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - clementperrin.fr
+  resources:
+  - quaymirrorrepositories/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - clementperrin.fr
+  resources:
+  - quaymirrorrepositories/status
+  verbs:
+  - get
+  - patch
+  - update

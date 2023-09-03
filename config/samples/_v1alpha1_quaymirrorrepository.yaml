@@ -1,0 +1,12 @@
+apiVersion: clementperrin.fr/v1alpha1
+kind: QuayMirrorRepository
+metadata:
+  labels:
+    app.kubernetes.io/name: quaymirrorrepository
+    app.kubernetes.io/instance: quaymirrorrepository-sample
+    app.kubernetes.io/part-of: quay-mirror-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: quay-mirror-operator
+  name: quaymirrorrepository-sample
+spec:
+  # TODO(user): Add fields here

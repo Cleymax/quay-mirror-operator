@@ -1,0 +1,92 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[]'
+    capabilities: Basic Install
+  name: quay-mirror-operator.v0.0.0
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - description: QuayMirrorLocation is the Schema for the quaymirrorlocations API
+      displayName: Quay Mirror Location
+      kind: QuayMirrorLocation
+      name: quaymirrorlocations.clementperrin.fr
+      specDescriptors:
+      - description: InsecureRegistry refers to whether to skip TLS verification to
+          the Quay registry.
+        displayName: Insecure Registry
+        path: insecureRegistry
+      - description: QuayCredentialsSecret refers to the Secret containing credentials
+          to communicate with the Quay registry.
+        displayName: Quay Credentials secret
+        path: quayCredentialsSecret
+        x-descriptors:
+        - urn:alm:descriptor:io.kubernetes:Secret
+      - description: Key represents the specific key to reference from the secret
+        displayName: Key within the secret
+        path: quayCredentialsSecret.key
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: Name represents the name of the secret
+        displayName: Name of the secret
+        path: quayCredentialsSecret.name
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: Namespace represents the namespace containing the secret
+        displayName: Namespace containing the secret
+        path: quayCredentialsSecret.namespace
+        x-descriptors:
+        - urn:alm:descriptor:com.tectonic.ui:text
+      - description: QuayHostname is the hostname of the Quay registry.
+        displayName: Quay hostname
+        path: quayHostname
+      - description: QuayOrganization is the organization within the Quay registry
+          to mirror.
+        displayName: Quay organization
+        path: quayOrganization
+      statusDescriptors:
+      - displayName: Conditions
+        path: conditions
+        x-descriptors:
+        - urn:alm:descriptor:io.kubernetes.conditions
+      - description: RepositoryCount is the number of repositories in the Quay organization.
+        displayName: Repository count
+        path: repositoryCount
+      version: v1alpha1
+    - description: QuayMirrorRepository is the Schema for the quaymirrorrepositories
+        API
+      displayName: Quay Mirror Repository
+      kind: QuayMirrorRepository
+      name: quaymirrorrepositories.clementperrin.fr
+      version: v1alpha1
+  description: Operator to manage mirror repository on Quay
+  displayName: Quay Mirror Operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      deployments: null
+    strategy: ""
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - quay
+  - mirror
+  links:
+  - name: Quay Mirror Operator
+    url: https://quay-mirror-operator.domain
+  maturity: alpha
+  provider:
+    name: clementperrin/quay-mirror-operator
+  version: 0.0.0

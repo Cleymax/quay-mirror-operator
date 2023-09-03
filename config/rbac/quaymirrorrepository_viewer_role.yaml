@@ -1,0 +1,27 @@
+# permissions for end users to view quaymirrorrepositories.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: quaymirrorrepository-viewer-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: quay-mirror-operator
+    app.kubernetes.io/part-of: quay-mirror-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: quaymirrorrepository-viewer-role
+rules:
+- apiGroups:
+  - clementperrin.fr
+  resources:
+  - quaymirrorrepositories
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - clementperrin.fr
+  resources:
+  - quaymirrorrepositories/status
+  verbs:
+  - get

@@ -1,0 +1,31 @@
+# permissions for end users to edit quaymirrorlocations.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: quaymirrorlocation-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: quay-mirror-operator
+    app.kubernetes.io/part-of: quay-mirror-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: quaymirrorlocation-editor-role
+rules:
+- apiGroups:
+  - clementperrin.fr
+  resources:
+  - quaymirrorlocations
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - clementperrin.fr
+  resources:
+  - quaymirrorlocations/status
+  verbs:
+  - get
